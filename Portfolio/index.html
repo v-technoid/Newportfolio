@@ -131,17 +131,18 @@
                 <div class="page-back">
                     <h1 class="title">Get in Touch!</h1>
                     <div class="contact-container">
-                        <form action="#" class="contact-form">
+                        <form action="https://api.web3forms.com/submit" method="POST" class="contact-form" name="theform" id="myform">
+                            <input type="hidden" name="access_key" value="63fed3eb-ba39-41ca-af4b-fe289bb9954a">
                             <div class="input-group">
-                                <input type="text" name="name" placeholder="Full Name" required>
+                                <input type="text" name="name" id="fname" placeholder="Full Name" onkeyup="checkform()" required>
                             </div>
                             <div class="input-group">
-                                <input type="email" name="email" placeholder="Email Address" required>
+                                <input type="email" name="email" id="femail" placeholder="Email Address" onkeyup="checkform()" required>
                             </div>
                             <div class="input-group">
-                                <textarea name="" cols="30" rows="10" placeholder="Your Message" required></textarea>
+                                <textarea name="message" cols="30" id="fmessage" rows="10" placeholder="Your Message" onkeyup="checkform()" required></textarea>
                             </div>
-                            <input type="submit" class="btn" value="Send Message">
+                            <input type="submit" id="form-btn" class="btn" name="submit" value="Send Message" disabled>
                         </form>
                     </div>
                     <span class="number-page">6</span>

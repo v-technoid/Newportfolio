@@ -89,13 +89,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+function checkform()
+{
+    var take= document.forms['theform'].elements;
+    var fieldmustbefilled = true;
+    for(var i=0; i<take.length; i++)
+        {
+            if(take[i].value.length == 0)
+                fieldmustbefilled = false;
+        }
 
+        if(fieldmustbefilled) 
+            {
+                document.getElementById("form-btn").disabled =false;
+                document.getElementById("form-btn").style.backgroundColor = "#00abf0";
+                document.getElementById("form-btn").style.color = "white";
+                document.getElementById("form-btn").style.borderColor = "#00abf0";
+            }
+        else 
+        {
+            document.getElementById("form-btn").disabled = true;
+            document.getElementById("form-btn").style.backgroundColor = "#8E8E8E";
+            document.getElementById("form-btn").style.color = "grey";
+            document.getElementById("form-btn").style.borderColor = "grey";
+        }
 
-
-
-
-
-
+}
 
 const pageTurnBtn = document.querySelectorAll(".nextprev-btn");
 
