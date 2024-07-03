@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('root');
+    
+    const createAndAppendElement = (tag, parent, attributes = {}, innerHTML = '') => {
+        const element = document.createElement(tag);
+        Object.keys(attributes).forEach(attr => element.setAttribute(attr, attributes[attr]));
+        element.innerHTML = innerHTML;
+        parent.appendChild(element);
+        return element;
+    };
+
     const profile = portfolioData.profile;
     const workExperience = portfolioData.workExperience;
     const education = portfolioData.education;
@@ -8,84 +18,103 @@ document.addEventListener('DOMContentLoaded', () => {
     const achievements = portfolioData.achievements;
 
     // Populate profile data
-    document.getElementById('profile-image').src = profile.image;
-    document.getElementById('profile-name').innerHTML = profile.name.split('').map(letter => `
-        <li class="check">
-            <input type="checkbox" />
-            <div class="edit">${letter}</div>
-        </li>`).join('');
-    document.getElementById('profile-role').textContent = profile.role;
-    document.getElementById('profile-role-duplicate').textContent = profile.role;
-    document.getElementById('profile-bio').textContent = profile.bio;
+    const profileImage = document.getElementById('profile-image');
+    profileImage.setAttribute('src', profile.image);
 
-    document.getElementById('profile-social-media').innerHTML = profile.socialMedia.map(sm => `
-        <a href="${sm.link}"><i class='bx bxl-${sm.platform} bx-flashing'></i></a>
-    `).join('');
+    const profileName = document.getElementById('profile-name');
+    profile.name.split('').forEach(letter => {
+        const li = createAndAppendElement('li', profileName, { class: 'check' });
+        createAndAppendElement('input', li, { type: 'checkbox' });
+        createAndAppendElement('div', li, { class: 'edit' }, letter);
+    });
 
-    document.getElementById('profile-cv-link').href = profile.cvLink;
+    const profileRole = document.getElementById('profile-role');
+    profileRole.textContent = profile.role;
+    const profileRoleDuplicate = document.getElementById('profile-role-duplicate');
+    profileRoleDuplicate.textContent = profile.role;
+
+    const profileBio = document.getElementById('profile-bio');
+    profileBio.textContent = profile.bio;
+
+    const profileSocialMedia = document.getElementById('profile-social-media');
+    profile.socialMedia.forEach(sm => {
+        const a = createAndAppendElement('a', profileSocialMedia, { href: sm.link });
+        createAndAppendElement('i', a, { class: `bx bxl-${sm.platform} bx-flashing` });
+    });
+
+    const profileCvLink = document.getElementById('profile-cv-link');
+    profileCvLink.setAttribute('href', profile.cvLink);
 
     // Populate work experience
-    document.getElementById('work-experience').innerHTML = workExperience.map(exp => `
-        <div class="workeduc-content">
-            <span class="year"><i class='bx bxs-calendar'></i>${exp.date}</span>
-            <h3>${exp.role} - ${exp.company}</h3>
-            <ul>${exp.description.map(desc => `<li>${desc}</li>`).join('')}</ul>
-        </div>
-    `).join('');
+    const workExperienceContainer = document.getElementById('work-experience');
+    workExperience.forEach(exp => {
+        const div = createAndAppendElement('div', workExperienceContainer, { class: 'workeduc-content' });
+        createAndAppendElement('span', div, { class: 'year' }, `<i class='bx bxs-calendar'></i>${exp.date}`);
+        createAndAppendElement('h3', div, {}, `${exp.role} - ${exp.company}`);
+        const ul = createAndAppendElement('ul', div);
+        exp.description.forEach(desc => {
+            createAndAppendElement('li', ul, {}, desc);
+        });
+    });
 
     // Populate education
-    document.getElementById('education').innerHTML = education.map(edu => `
-        <div class="workeduc-content">
-            <span class="year"><i class='bx bxs-calendar'></i>${edu.date}</span>
-            <h3>${edu.institution}</h3>
-            <ul>${edu.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
-        </div>
-    `).join('');
+    const educationContainer = document.getElementById('education');
+    education.forEach(edu => {
+        const div = createAndAppendElement('div', educationContainer, { class: 'workeduc-content' });
+        createAndAppendElement('span', div, { class: 'year' }, `<i class='bx bxs-calendar'></i>${edu.date}`);
+        createAndAppendElement('h3', div, {}, edu.institution);
+        const ul = createAndAppendElement('ul', div);
+        edu.details.forEach(detail => {
+            createAndAppendElement('li', ul, {}, detail);
+        });
+    });
 
     // Populate services
-    document.getElementById('services').innerHTML = services.map(service => `
-        <div class="services-content">
-            <i class='bx ${service.icon}'></i>
-            <h3>${service.title}</h3>
-            <p>${service.description}</p>
-        </div>
-    `).join('');
+    const servicesContainer = document.getElementById('services');
+    services.forEach(service => {
+        const div = createAndAppendElement('div', servicesContainer, { class: 'services-content' });
+        createAndAppendElement('i', div, { class: `bx ${service.icon}` });
+        createAndAppendElement('h3', div, {}, service.title);
+        createAndAppendElement('p', div, {}, service.description);
+    });
 
     // Populate skills
-    document.getElementById('skills').innerHTML = `
-        <div class="skills-content">
-            <h3>Front-End</h3>
-            <div class="content">${skills.frontend.map(skill => `
-                <span><i class='bx ${skill.icon}'></i> ${skill.name}</span>
-            `).join('')}</div>
-        </div>
-        <div class="skills-content">
-            <h3>Programming Languages</h3>
-            <div class="content">${skills.programmingLanguages.map(skill => `
-                <span><i class='bx ${skill.icon}'></i> ${skill.name}</span>
-            `).join('')}</div>
-        </div>
-        <div class="skills-content">
-            <h3>IDE and Tools</h3>
-            <div class="content">${skills.tools.map(tool => `
-                <span><i class='bx ${tool.icon}'></i> ${tool.name}</span>
-            `).join('')}</div>
-        </div>
-    `;
+    const skillsContainer = document.getElementById('skills');
+    
+    const frontendSkills = createAndAppendElement('div', skillsContainer, { class: 'skills-content' });
+    createAndAppendElement('h3', frontendSkills, {}, 'Front-End');
+    const frontendContent = createAndAppendElement('div', frontendSkills, { class: 'content' });
+    skills.frontend.forEach(skill => {
+        createAndAppendElement('span', frontendContent, {}, `<i class='bx ${skill.icon}'></i> ${skill.name}`);
+    });
+
+    const programmingSkills = createAndAppendElement('div', skillsContainer, { class: 'skills-content' });
+    createAndAppendElement('h3', programmingSkills, {}, 'Programming Languages');
+    const programmingContent = createAndAppendElement('div', programmingSkills, { class: 'content' });
+    skills.programmingLanguages.forEach(skill => {
+        createAndAppendElement('span', programmingContent, {}, `<i class='bx ${skill.icon}'></i> ${skill.name}`);
+    });
+
+    const toolsSkills = createAndAppendElement('div', skillsContainer, { class: 'skills-content' });
+    createAndAppendElement('h3', toolsSkills, {}, 'IDE and Tools');
+    const toolsContent = createAndAppendElement('div', toolsSkills, { class: 'content' });
+    skills.tools.forEach(tool => {
+        createAndAppendElement('span', toolsContent, {}, `<i class='bx ${tool.icon}'></i> ${tool.name}`);
+    });
 
     // Populate projects
-    document.getElementById('projects').innerHTML = projects.map(project => `
-        <div class="project">
-            <h3>${project.title}</h3>
-        </div>
-    `).join('');
+    const projectsContainer = document.getElementById('projects');
+    projects.forEach(project => {
+        const div = createAndAppendElement('div', projectsContainer, { class: 'project' });
+        createAndAppendElement('h3', div, {}, project.title);
+    });
 
     // Populate achievements
-    document.getElementById('achievements').innerHTML = achievements.map(achievement => `
-        <div class="achievement">
-            <h3>${achievement.title}</h3>
-        </div>
-    `).join('');
+    const achievementsContainer = document.getElementById('achievements');
+    achievements.forEach(achievement => {
+        const div = createAndAppendElement('div', achievementsContainer, { class: 'achievement' });
+        createAndAppendElement('h3', div, {}, achievement.title);
+    });
 });
 
 
